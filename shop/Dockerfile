@@ -1,12 +1,14 @@
 FROM python:3.7
 
-RUN pip install django
 
 COPY . /app
 
 WORKDIR /app
 
 #RUN ls -la
+RUN pip install -r requirements.txt
+
+VOLUME . /app/shop
 
 EXPOSE 8000
 
