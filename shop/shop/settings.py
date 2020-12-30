@@ -23,7 +23,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '!5lika$li6dxmwk26h5=^&5l8q+5g89rk+*4^h1jdyi0)@o=&7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+#DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['django-ecom-live.herokuapp.com', '127.0.0.1']
 
@@ -134,7 +135,7 @@ USE_TZ = True
 # NEW VERSION
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+#STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATIC_URL = '/static/'
 

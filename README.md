@@ -1,9 +1,8 @@
 # Natalie's pet project: Django shop
-
 This repository contains Lesna pet project with Django e-commerce shop
 
-## Live website:
-Please check https://django-ecom-live.herokuapp.com/ to chech the code live.
+## Live website: https://django-ecom-live.herokuapp.com/
+Please refer to this link for checking web-site live.
 
 ## Brief description
 User can purchase both physical and e-products with guest and existing user 

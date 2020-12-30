@@ -97,18 +97,6 @@ class ShippingAddress(models.Model):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 # class Shop(models.Model):
 #     name = models.CharField('Name', max_lenght=255)
 #     city = models.CharField('City', max_lenght=255)
@@ -131,14 +119,6 @@ class ShippingAddress(models.Model):
 #
 #     def __str__(self):
 #         return "%s in %s" % (self.name, self.shop)
-
-#TODO
-#class Buyer(models.Model):
-#    name = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-#    email = models.
-#
-#    def __str__(self):
-#        return self.name
 
 
 

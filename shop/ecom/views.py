@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.http import JsonResponse
 from .models import *
@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import datetime
 from . utils_ecom import cookieCart, cartData, guestOrder
+from django.views.generic.detail import DetailView
 
 # Create your views here
 
@@ -116,3 +117,16 @@ def processOrder(request):
     return JsonResponse('Payment completed!', safe=False)
 
 
+# TODO write view for product page
+# def product_view(request, product_id):
+#     print(f'Data: {request.body}')
+#     data = cartData(request)
+#     cartItems = data['cartItems']
+#
+#     product = Product.objects.get(id=product_id)
+#     context = {'products': products, 'cartItems': cartItems}
+#     return render(request, 'store.html', context)
+
+
+class ProductDetailView(DetailView):
+    model = Product

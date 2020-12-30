@@ -1,0 +1,18 @@
+{% extends 'main.html'%}
+{% load static %}
+{% block content %}
+
+
+<div class="row">
+	<div class="col-lg-6">
+        <img class="medium" src="{{object.imageURL}}">
+		<div class="box-element product">
+            <h6><strong>{{ object.name }}</strong></h6>
+            <hr>
+            <button data-product={{object.id}} data-action="add" class="btn btn-outline-secondary add-btn update-cart">Add To Cart</button>
+            <h4 style="display: inline-block; float:right">${{ object.price|floatformat:2 }}</h4>
+		</div>
+	</div>
+</div>
+
+{% endblock content %}
