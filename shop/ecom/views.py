@@ -117,16 +117,16 @@ def processOrder(request):
     return JsonResponse('Payment completed!', safe=False)
 
 
-# TODO write view for product page
-# def product_view(request, product_id):
-#     print(f'Data: {request.body}')
-#     data = cartData(request)
-#     cartItems = data['cartItems']
-#
-#     product = Product.objects.get(id=product_id)
-#     context = {'products': products, 'cartItems': cartItems}
-#     return render(request, 'store.html', context)
-
-
 class ProductDetailView(DetailView):
     model = Product
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        data = cartData(self.request)
+        cartItems = data['cartItems']
+        context['cartItems'] = cartItems
+        return context
+
+
+#TODO use not pk but slug
