@@ -27,4 +27,4 @@ Paypal sandbox user).
 - Bootstrap;
 - Heroku + Whitenoise;
 - Paypal integration;
-- SQLite / Postgress;
+- PostgreSQL deploy on Amazon RDS;
