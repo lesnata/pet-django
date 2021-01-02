@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'SECRET_KEY'
+SECRET_KEY = 'ENV'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['django-ecom-live.herokuapp.com', '127.0.0.1']
 
 INSTALLED_APPS = [
     'ecom',
+    'storages',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -87,14 +88,12 @@ WSGI_APPLICATION = 'shop.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'DB_NAME',
-        'HOST': 'DB_HOST',
+        'NAME': 'ecom_db_1',
+        'HOST': 'ENV',
         'PORT': 5432,
-        'USER': 'DB_USER',
-        'PASSWORD': 'DB_PASSWORD',
+        'USER': 'ENV',
+        'PASSWORD': 'ENV',
     }
 }
 
@@ -153,12 +152,21 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+   os.path.join(BASE_DIR, 'static')
 ]
 
 MEDIA_URL = '/images/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
+# TODO S3 BUCKETS CONFIG
+# AWS_ACCESS_KEY_ID = 'I_HAVE_KEY_ALREADY'
+# AWS_SECRET_ACCESS_KEY = 'I_HAVE_SECRET_KEY_TOO'
+# AWS_STORAGE_BUCKET_NAME = 'ecom-pet-bucket'
+#
+# AWS_S3_FILE_OVERWRITE = False
+# AWS_DEFAULT_ACL = None
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 ##
