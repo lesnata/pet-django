@@ -1,35 +1,38 @@
-from django.test import TestCase
+from django.test import TestCase, SimpleTestCase
 from django.urls import reverse, resolve
+from ecom.views import store, cart, checkout, ProductDetailView, updateItem, processOrder
 
 
-#FIXTURES = ['']
+class TestUrls(SimpleTestCase):
+
+    def test_store_url_resolves(self):
+        url = reverse('store')
+        self.assertEquals(resolve(url).func, store)
+
+    def test_cart_url_resolves(self):
+        url = reverse('cart')
+        self.assertEquals(resolve(url).func, cart)
+
+    def test_checkout_url_resolves(self):
+        url = reverse('checkout')
+        self.assertEquals(resolve(url).func, checkout)
+
+    def test_update_item_url_resolves(self):
+        url = reverse('update_item')
+        self.assertEquals(resolve(url).func, updateItem)
+
+    def test_proces_order_url_resolves(self):
+        url = reverse('process_order')
+        self.assertEquals(resolve(url).func, processOrder)
+
+    def test_product_detail_url_resolves(self):
+        url = reverse('product_detail', args=[1])
+        print(url)
+        print(resolve(url))
+        self.assertEquals(resolve(url).func.view_class, ProductDetailView)
+
 
 # TODO Models test-case: creation, save, remove
-# TODO Views test-case:
-# TODO URLS test
 # TODO Function tests
 
-class TestUrls:
 
-    def test_product_detail_url(self):
-        path = reverse('store')
-        assert resolve(path).view_name == 'store'
-
-
-
-
-# class TestView(TestCase):
-#     fixtures = FIXTURES
-#
-#     def test_customer(self):
-#         response = self.client.get(reverse('customer'))
-#         self.assertEqual(response.status_code, 200)
-#
-#     def test_product(self):
-#         response = self.client.get(reverse('product'))
-#         self.assertEqual(response.status_code, 200)
-#         self.assertTemplateUsed(response, 'ecom/product_detail.html')
-#
-#     def test_order(self):
-#         response = self.client.get(reverse('order'))
-#
