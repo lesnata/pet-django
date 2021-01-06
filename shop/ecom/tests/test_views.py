@@ -11,17 +11,18 @@ import json
 class TestViews(TestCase):
 
     def setUp(self):
-        self.client = Client()
+        # Setting up urls
         self.store_url = reverse('store')
         self.cart_url = reverse('cart')
         self.checkout_url = reverse('checkout')
         self.update_item = reverse('update_item')
+        self.product_detail_url = reverse('product_detail', args=[1])
 
         # Setting up objects
-        self.user_1 = User.objects.create_user('Karl', 'm@email.com', 'chevyspass')
-        self.product_detail_url = reverse('product_detail', args=[1])
-        self.product_1 = Product.objects.create(name="Pen", price="5.00")
+        self.client = Client()
+        self.user_1 = User.objects.create_user('karl', 'm@email.com', 'chevyspass')
         self.customer_1 = Customer.objects.create(user=self.user_1, name="Karl", email="m@email.com")
+        self.product_1 = Product.objects.create(name="Pen", price="5.00")
         self.order_1 = Order.objects.create(customer=self.customer_1, transaction_id=1)
         self.order_item_1 = OrderItem.objects.create(product=self.product_1, order=self.order_1, quantity=2)
 
@@ -51,13 +52,48 @@ class TestViews(TestCase):
         self.assertEqual(self.order_item_1.id, last_order_item.id)
 
     def test_updateItem_action_add(self):
-        request = {"productId": "5", "action": "add"}
-        response = self.client.post(reverse('update_item'), request=request)
+        self.client.login(username='karl', password='chevyspass')
+        request_1 = {'productId': self.product_1.id, 'action': 'add'}
+        response = self.client.post(reverse('update_item'), json.dumps(request_1), content_type='application/json')
+        updated_order_item = OrderItem.objects.get(id=self.product_1.id)
+        print('Updated order item quantity:')
+        print(updated_order_item.quantity)
+        self.assertEqual(updated_order_item.quantity, 3)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+
+
+        # Request: < WSGIRequest: POST '/update_item/' >
+        # Request type: <class 'django.core.handlers.wsgi.WSGIRequest'>
+        #
+        # --------------------------------------
+        # Json.loads(request.body) is:
+        # {'productId': '1', 'action': 'add'}
+
+        # request.user: admin_lesna
+        # request.user.customer: Natalie
+
+
 
         #response = self.client.get(reverse('update_item'), json.loads(data))
 
-        self.assertEqual(response.status_code, HTTPStatus.OK)
+        # Data: b'{"form":{"name":null,"email":null,"total":"82.50"},"shipping":{"address":"Sezame street","city":"Adelaide","state":"WU","zipcode":"065555"}}'
+        #
+        # Data: b'{"form":{"name":"testing","email":"sd@email.com","total":"53.30"},"shipping":{"address":"Sezame street","city":"Adelaide","state":"AW","zipcode":"3066"}}'
+        # Data: < WSGIRequest: POST
+        # '/process_order/' >
+        # Data: <
+        #
+        # class 'django.core.handlers.wsgi.WSGIRequest'>
+
         #self.assertRedirects(response, "/thanks/")
+
+
+
+
+# TODO ProcessOrder test
+    # def test_processOrder(self):
+    #
+    #     self.assertEqual(processOrder(fooo), JsonResponse('Payment completed!', safe=False))
 
 
 
