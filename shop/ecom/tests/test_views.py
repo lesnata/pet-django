@@ -16,6 +16,7 @@ class TestViews(TestCase):
         self.cart_url = reverse('cart')
         self.checkout_url = reverse('checkout')
         self.update_item = reverse('update_item')
+        self.process_order = reverse('process_order')
         self.product_detail_url = reverse('product_detail', args=[1])
 
         # Setting up objects
@@ -43,8 +44,6 @@ class TestViews(TestCase):
 
     def test_updateItem_order_is_created(self):
         last_order = Order.objects.latest('id')
-        print("Id of last created Order is:")
-        print(last_order.id)
         self.assertEqual(self.order_1.id, last_order.id)
 
     def test_updateItem_orderItem_is_created(self):
@@ -54,57 +53,61 @@ class TestViews(TestCase):
     def test_updateItem_action_add(self):
         self.client.login(username='karl', password='chevyspass')
         request_1 = {'productId': self.product_1.id, 'action': 'add'}
-        response = self.client.post(reverse('update_item'), json.dumps(request_1), content_type='application/json')
+        response = self.client.post(self.update_item, json.dumps(request_1), content_type='application/json')
         updated_order_item = OrderItem.objects.get(id=self.product_1.id)
-        print('Updated order item quantity:')
-        print(updated_order_item.quantity)
         self.assertEqual(updated_order_item.quantity, 3)
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
+    def test_updateItem_action_remove(self):
+        self.client.login(username='karl', password='chevyspass')
+        request_2 = {'productId': self.product_1.id, 'action': 'remove'}
+        response = self.client.post(self.update_item, json.dumps(request_2), content_type='application/json')
+        updated_order_item = OrderItem.objects.get(id=self.product_1.id)
+        self.assertEqual(updated_order_item.quantity, 1)
 
-        # Request: < WSGIRequest: POST '/update_item/' >
-        # Request type: <class 'django.core.handlers.wsgi.WSGIRequest'>
-        #
-        # --------------------------------------
-        # Json.loads(request.body) is:
-        # {'productId': '1', 'action': 'add'}
+    def test_updateItem_deletion(self):
+        self.client.login(username='karl', password='chevyspass')
+        request_3 = {'productId': self.product_1.id, 'action': 'remove'}
+        response = self.client.post(self.update_item, json.dumps(request_3), content_type='application/json')
+        response = self.client.post(self.update_item, json.dumps(request_3), content_type='application/json')
+        with self.assertRaises(OrderItem.DoesNotExist):
+            OrderItem.objects.get(id=self.product_1.id)
 
-        # request.user: admin_lesna
-        # request.user.customer: Natalie
+    def test_processOrder_order_completed(self):
+        self.client.login(username='karl', password='chevyspass')
+        product_2 = Product.objects.create(name="Candy", price="10.0")
+        order_item_2 = OrderItem.objects.create(product=product_2, order=self.order_1, quantity=1)
+        user_form_data = {
+            'form': {
+                'total': '20.00'
+            },
+            'shipping': {
+                    'address': 'Old school street 9',
+                    'city': 'Rools-Royce',
+                    'state': 'KU',
+                    'zipcode': '12355',
+                }
+            }
+        response = self.client.post(self.process_order, json.dumps(user_form_data), content_type='application/json')
+        updated_order = Order.objects.get(id=self.customer_1.id)
+        self.assertTrue(updated_order.complete)
 
+    # def test_ProductDetail_template(self):
+    #     response = self.client.get(self.product_detail_url)
+    #     #print(resolve(self.product_detail_url))
+    #     self.assertTemplateUsed(response, 'ecom/product_detail.html')
 
+    def test_ProductDetail_name_in_context(self):
+        response = self.client.get(self.product_detail_url)
+        print("Here is what's in Response.context: ")
+        print(response.context)
+        print("Product.objects.get(id=1) is: ")
+        print(Product.objects.get(id=1))
+        # self.assertIn('environment', response.context)
+        self.assertContains(response.context, Product.objects.get(id=1))
 
-        #response = self.client.get(reverse('update_item'), json.loads(data))
-
-        # Data: b'{"form":{"name":null,"email":null,"total":"82.50"},"shipping":{"address":"Sezame street","city":"Adelaide","state":"WU","zipcode":"065555"}}'
-        #
-        # Data: b'{"form":{"name":"testing","email":"sd@email.com","total":"53.30"},"shipping":{"address":"Sezame street","city":"Adelaide","state":"AW","zipcode":"3066"}}'
-        # Data: < WSGIRequest: POST
-        # '/process_order/' >
-        # Data: <
-        #
-        # class 'django.core.handlers.wsgi.WSGIRequest'>
 
         #self.assertRedirects(response, "/thanks/")
-
-
-
-
-# TODO ProcessOrder test
-    # def test_processOrder(self):
-    #
-    #     self.assertEqual(processOrder(fooo), JsonResponse('Payment completed!', safe=False))
-
-
-
-# TODO ProductDetail class based view
-#     def test_product_detail_GET(self):
-#         response = self.client.get(self.product_detail_url)
-#         print("Here is what's in Response")
-#         print(response)
-#         self.assertEqual(1, 1)
-#         self.assertEqual(context, product_1.name)
-
 
         # url = reverse('product_detail', args=[1])
         #
