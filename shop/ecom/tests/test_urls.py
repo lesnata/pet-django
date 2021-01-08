@@ -21,14 +21,12 @@ class TestUrls(SimpleTestCase):
         url = reverse('update_item')
         self.assertEquals(resolve(url).func, updateItem)
 
-    def test_proces_order_url_resolves(self):
+    def test_process_order_url_resolves(self):
         url = reverse('process_order')
         self.assertEquals(resolve(url).func, processOrder)
 
     def test_product_detail_url_resolves(self):
         url = reverse('product_detail', args=[1])
-        print(url)
-        print(resolve(url))
         self.assertEquals(resolve(url).func.view_class, ProductDetailView)
 
 
