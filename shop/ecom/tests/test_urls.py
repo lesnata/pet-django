@@ -30,7 +30,6 @@ class TestUrls(SimpleTestCase):
         self.assertEquals(resolve(url).func.view_class, ProductDetailView)
 
 
-# TODO Models test-case: creation, save, remove
 # TODO Function tests
 
 

@@ -10,13 +10,6 @@ import json
 class TestViews(TestCase):
 
     def setUp(self):
-        # Setting up urls
-        self.store_url = reverse('store')
-        self.cart_url = reverse('cart')
-        self.checkout_url = reverse('checkout')
-        self.update_item = reverse('update_item')
-        self.process_order = reverse('process_order')
-        self.product_detail = reverse('product_detail', args=[1])
 
         # Setting up objects
         self.client = Client()
@@ -25,6 +18,14 @@ class TestViews(TestCase):
         self.product_1 = Product.objects.create(name="Pen", price="5.00")
         self.order_1 = Order.objects.create(customer=self.customer_1, transaction_id=1)
         self.order_item_1 = OrderItem.objects.create(product=self.product_1, order=self.order_1, quantity=2)
+
+        # Setting up urls
+        self.store_url = reverse('store')
+        self.cart_url = reverse('cart')
+        self.checkout_url = reverse('checkout')
+        self.update_item = reverse('update_item')
+        self.process_order = reverse('process_order')
+        self.product_detail = reverse('product_detail', args=[self.order_item_1.id])
 
     def tearDown(self):
         self.user_1.delete()
@@ -50,15 +51,25 @@ class TestViews(TestCase):
 
 
     def test_ProductDetail_template(self):
-        response = self.client.get(self.product_detail)
-        print("Response is in test_ProductDetail_template")
-        print(response)
-        self.assertTemplateUsed(response, 'product_detail.html')
+        # response = self.client.get(self.product_detail)
+        # print("Response is in test_ProductDetail_template")
+        # print(response)
+        # self.assertTemplateUsed(response, 'product_detail.html')
+        print('product_1_id: ')
+        product_1_id = self.product_1.id
+        print(product_1_id)
+        print('Product.objects.all()')
+        print(Product.objects.all())
+        print('Product.objects.count()')
+        print(Product.objects.count())
+
+        response = self.client.get('8/')
+        self.assertTemplateUsed(response, 'ecom/product_detail.html')
 
     def test_ProductDetail_object_in_context(self):
         response = self.client.get(self.product_detail)
-        self.assertEqual(response.context[0]['object'], Product.objects.get(id=1))
-        #self.assertIn(Product.objects.get(id=1), response.context[0][3])
+        #self.assertEqual(response.context[0]['object'], Product.objects.get(id=1))
+        self.assertIn(Product.objects.get(id=self.product_1.id), response.context[0].values())
 
 
 
