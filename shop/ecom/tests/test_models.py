@@ -35,11 +35,6 @@ class TestModels(TestCase):
         self.assertEqual(self.order_1.get_cart_items, 2)
 
     def test_orderItem_get_total(self):
-        print("self.order_item_1.get_total")
-        print(self.order_item_1.get_total)
-        print("OrderItem.objects.all()")
-        print(OrderItem.objects.all())
-
         self.assertEqual(self.order_item_1.get_total, 10.00)
 
 

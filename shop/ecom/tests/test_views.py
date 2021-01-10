@@ -25,7 +25,7 @@ class TestViews(TestCase):
         self.checkout_url = reverse('checkout')
         self.update_item = reverse('update_item')
         self.process_order = reverse('process_order')
-        self.product_detail = reverse('product_detail', args=[self.order_item_1.id])
+        self.product_detail = reverse('product_detail', args=[self.product_1.id])
 
     def tearDown(self):
         self.user_1.delete()
@@ -35,42 +35,31 @@ class TestViews(TestCase):
         self.order_item_1.delete()
 
     def test_store_HTTPStatus(self):
-        response = self.client.get(self.store_url)
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(response, 'store.html')
+        response_1 = self.client.get(self.store_url)
+        self.assertEqual(response_1.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(response_1, 'store.html')
 
     def test_cart_HTTPStatus(self):
-        response = self.client.get(self.cart_url)
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(response, 'cart.html')
+        response_2 = self.client.get(self.cart_url)
+        self.assertEqual(response_2.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(response_2, 'cart.html')
 
     def test_checkout_HTTPStatus(self):
-        response = self.client.get(self.checkout_url)
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(response, 'checkout.html')
+        response_3 = self.client.get(self.checkout_url)
+        self.assertEqual(response_3.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(response_3, 'checkout.html')
 
 
     def test_ProductDetail_template(self):
-        # response = self.client.get(self.product_detail)
-        # print("Response is in test_ProductDetail_template")
-        # print(response)
-        # self.assertTemplateUsed(response, 'product_detail.html')
-        print('product_1_id: ')
-        product_1_id = self.product_1.id
-        print(product_1_id)
-        print('Product.objects.all()')
-        print(Product.objects.all())
-        print('Product.objects.count()')
-        print(Product.objects.count())
-
-        response = self.client.get('8/')
-        self.assertTemplateUsed(response, 'ecom/product_detail.html')
+        response_4 = self.client.get(self.product_detail)
+        self.assertTemplateUsed(response_4, 'ecom/product_detail.html')
 
     def test_ProductDetail_object_in_context(self):
-        response = self.client.get(self.product_detail)
-        #self.assertEqual(response.context[0]['object'], Product.objects.get(id=1))
-        self.assertIn(Product.objects.get(id=self.product_1.id), response.context[0].values())
-
+        response_5 = self.client.get(self.product_detail)
+        self.assertEqual(response_5.context[0]['object'], Product.objects.get(id=self.product_1.id))
+        # TODO debug assertIn
+        #self.assertIn(Product.objects.get(id=self.product_1.id), response_5.context[0].values())
+        #self.assertIn(Product.objects.get(id=1), response.context[0].values())
 
 
     def test_updateItem_order_is_created(self):

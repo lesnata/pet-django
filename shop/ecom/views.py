@@ -15,9 +15,6 @@ def health_check(request):
     return HttpResponse("OK")
 
 
-#START
-
-
 def store(request):
     data = cartData(request)
     cartItems = data['cartItems']
@@ -49,16 +46,23 @@ def checkout(request):
 
 def updateItem(request):
     data = json.loads(request.body)
+    print(f'Request is: {request} /n')
+    print(f'Request type: {type(request)}')
+    print('--------------------------------------')
+    print(f'Json.loads(request.body) is: {data}')
     productId = data['productId']
     action = data['action']
-    print('Action:', action)
-    print('ProductId:', productId)
-
+    print(f'Action: {action}, ProductId: {productId}')
+    print('--------------------------------------')
     customer = request.user.customer
+    print(f'request.user: {request.user}')
+    print(f'request.user.customer: {request.user.customer}')
     product = Product.objects.get(id=productId)
     print('Product added:', product)
+
     order, created = Order.objects.get_or_create(customer=customer, complete=False)
     print('Order number:', order)
+
     orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
     if action == 'add':
         orderItem.quantity = (orderItem.quantity + 1)
@@ -84,6 +88,7 @@ def updateItem(request):
 #@csrf_exempt
 def processOrder(request):
     print(f'Data: {request.body}')
+    print(f'Request: {request}')
     transaction_id = datetime.datetime.now().timestamp()
     data = json.loads(request.body)
 
@@ -97,7 +102,6 @@ def processOrder(request):
 
     total = float(data['form']['total'])
     order.transaction_id = transaction_id
-
     if total == float(order.get_cart_total):
         order.complete = True
     order.save()
@@ -113,7 +117,6 @@ def processOrder(request):
             city=data['shipping']['city'],
             zipcode=data['shipping']['zipcode'],
         )
-
     return JsonResponse('Payment completed!', safe=False)
 
 
@@ -126,6 +129,7 @@ class ProductDetailView(DetailView):
         data = cartData(self.request)
         cartItems = data['cartItems']
         context['cartItems'] = cartItems
+        print(f'Context is: {context}')
         return context
 
 
