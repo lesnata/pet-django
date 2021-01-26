@@ -28,4 +28,4 @@ Paypal sandbox user).
 - Heroku + Whitenoise;
 - Paypal integration;
 - PostgreSQL deploy on Amazon RDS;
-- Selenium tests;
+- Unit-tests and Selenium tests;
