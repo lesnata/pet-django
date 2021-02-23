@@ -30,6 +30,7 @@ Paypal sandbox user).
 
 
 
+<<<<<<< HEAD
 ## Technologies
 * Django==3.1.4;
 * flake8==3.8.4;
@@ -45,3 +46,13 @@ Paypal sandbox user).
 
 ## Style conventions
 For code conventions used Flake8 library
+=======
+## Technology stack 
+- Django;
+- JavaScript;
+- Bootstrap;
+- Heroku + Whitenoise;
+- Paypal integration;
+- PostgreSQL deploy on Amazon RDS;
+- Unit-tests and Selenium tests;
+>>>>>>> e9916d1655c6c6232d6765623f7b1f0f296a80e8
