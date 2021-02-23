@@ -1,9 +1,7 @@
 from selenium import webdriver
-from ecom.models import *
+from ecom.models import Product
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse
-from django.test import Client
-from django.contrib.auth.models import User
 import time
 
 
@@ -24,7 +22,8 @@ class FunctionalTests(StaticLiveServerTestCase):
 
     def test_view_button_redirects_to_product_page(self):
         self.browser.get(self.live_server_url)
-        product_url = self.live_server_url + reverse('product_detail', args=[self.product_1.id])
+        product_url = self.live_server_url + reverse('product_detail',
+                                                     args=[self.product_1.id])
         time.sleep(3)
         self.browser.find_element_by_class_name('btn-outline-success').click()
         self.assertEquals(self.browser.current_url, product_url)
@@ -33,5 +32,6 @@ class FunctionalTests(StaticLiveServerTestCase):
         checkout_url = self.live_server_url + reverse('checkout')
         self.browser.get(checkout_url)
         time.sleep(3)
-        hidden_element = self.browser.find_element_by_id('shipping-info').is_displayed()
+        hidden_element = self.browser\
+            .find_element_by_id('shipping-info').is_displayed()
         self.assertFalse(hidden_element)

@@ -1,5 +1,5 @@
 import json
-from . models import *
+from .models import Product, Order, Customer, OrderItem
 
 
 def cookieCart(request):
@@ -35,7 +35,7 @@ def cookieCart(request):
             }
             items.append(item)
 
-            if product.digital == False:
+            if product.digital is False:
                 order["shipping"] = True
 
         except:
@@ -46,7 +46,8 @@ def cookieCart(request):
 def cartData(request):
     if request.user.is_authenticated:
         customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        order, created = Order.objects.get_or_create(customer=customer,
+                                                     complete=False)
         items = order.orderitem_set.all()
         cartItems = order.get_cart_items
     else:
@@ -85,6 +86,3 @@ def guestOrder(request, data):
             quantity=item['quantity']
         )
     return customer, order
-
-
-

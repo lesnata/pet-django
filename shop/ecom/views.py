@@ -1,11 +1,10 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
 from .models import *
-from django.views.decorators.csrf import csrf_exempt
 import json
 import datetime
-from . utils_ecom import cookieCart, cartData, guestOrder
+from .utils_ecom import cookieCart, cartData, guestOrder
 from django.views.generic.detail import DetailView
 
 # Create your views here
@@ -46,24 +45,14 @@ def checkout(request):
 
 def updateItem(request):
     data = json.loads(request.body)
-    print(f'Request is: {request} /n')
-    print(f'Request type: {type(request)}')
-    print('--------------------------------------')
-    print(f'Json.loads(request.body) is: {data}')
     productId = data['productId']
     action = data['action']
-    print(f'Action: {action}, ProductId: {productId}')
-    print('--------------------------------------')
     customer = request.user.customer
-    print(f'request.user: {request.user}')
-    print(f'request.user.customer: {request.user.customer}')
     product = Product.objects.get(id=productId)
-    print('Product added:', product)
-
-    order, created = Order.objects.get_or_create(customer=customer, complete=False)
-    print('Order number:', order)
-
-    orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
+    order, created = Order.objects.get_or_create(customer=customer,
+                                                 complete=False)
+    orderItem, created = OrderItem.objects.get_or_create(order=order,
+                                                         product=product)
     if action == 'add':
         orderItem.quantity = (orderItem.quantity + 1)
     elif action == 'remove':
@@ -75,7 +64,6 @@ def updateItem(request):
         orderItem.delete()
 
     items = order.orderitem_set.all()
-    print(f'What\'s inside our cart now?')
     for i in items:
         print(f'Product name: {i.product.name} \n'
               f'Product quantity: {i.quantity} \n'
@@ -85,17 +73,17 @@ def updateItem(request):
     return JsonResponse('Item was added', safe=False)
 
 
-#@csrf_exempt
+# from django.views.decorators.csrf import csrf_exempt
+# @csrf_exempt
 def processOrder(request):
-    print(f'Data: {request.body}')
-    print(f'Request: {request}')
     transaction_id = datetime.datetime.now().timestamp()
     data = json.loads(request.body)
 
     # creating Order model for authenticated and anonymous user
     if request.user.is_authenticated:
         customer = request.user.customer
-        order, created = Order.objects.get_or_create(customer=customer, complete=False)
+        order, created = Order.objects.get_or_create(customer=customer,
+                                                     complete=False)
 
     else:
         customer, order = guestOrder(request, data)
@@ -106,10 +94,8 @@ def processOrder(request):
         order.complete = True
     order.save()
 
-
-# getting shipping data from front-end
-    if order.shipping == True:
-        # creating Shipping Address object
+    # getting shipping data from front-end
+    if order.shipping:
         ShippingAddress.objects.create(
             customer=customer,
             order=order,
@@ -131,6 +117,3 @@ class ProductDetailView(DetailView):
         context['cartItems'] = cartItems
         print(f'Context is: {context}')
         return context
-
-
-#TODO use not pk but slug

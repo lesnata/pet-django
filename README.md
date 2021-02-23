@@ -1,8 +1,17 @@
-# Natalie's pet project: Django shop
+## Table of contents
+* [General info](#general-info)
+* [Live website](#live-website)
+* [Brief description](#brief-description)
+* [Technologies](#technologies)
+* [Style conventions](#style-conventions)
+
+# General info
+Natalie's pet project: Django shop
 This repository contains Lesna pet project with Django e-commerce shop
 
-## Live website: https://django-ecom-live.herokuapp.com/
-Please refer to this link for checking web-site live.
+## Live website
+Please refer to this link for checking web-site live:
+https://django-ecom-live.herokuapp.com/
 
 ## Brief description
 User can purchase both physical and e-products with guest and existing user 
@@ -21,10 +30,18 @@ Paypal sandbox user).
 
 
 
-## Technology stack 
-- Django;
-- JavaScript;
-- Bootstrap;
-- Heroku + Whitenoise;
-- Paypal integration;
-- PostgreSQL deploy on Amazon RDS;
+## Technologies
+* Django==3.1.4;
+* flake8==3.8.4;
+* Pillow==8.0.1;
+* psycopg2-binary==2.8.6;
+* selenium==3.141.0;
+* whitenoise==5.2.0
+* JavaScript;
+* Bootstrap;
+* Paypal integration;
+* Amazon RDS;
+
+
+## Style conventions
+For code conventions used Flake8 library
